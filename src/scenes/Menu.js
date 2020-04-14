@@ -24,20 +24,20 @@ class Menu extends Phaser.Scene{
         fixedWidth: 0
     }
 
-    //show menu text
-    let centerX = game.config.width/2;
-    let centerY = game.config.height/2;
-    let textSpacer = 64;
+        //show menu text
+        let centerX = game.config.width/2;
+        let centerY = game.config.height/2;
+        let textSpacer = 64;
 
-    this.add.text(centerX, centerY- textSpacer, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-    this.add.text(centerX, centerY, 'Use <- -> arrows to move & (F) to Fire', menuConfig).setOrigin(0.5);
-    menuConfig.backgroundColor = '#00ff00';
-    menuConfig.color = '#000';
-    this.add.text(centerX, centerY + textSpacer, 'Press <- for Esay or -> for Hard',menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY- textSpacer, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, 'Use <- -> arrows to move & (F) to Fire', menuConfig).setOrigin(0.5);
+        menuConfig.backgroundColor = '#00ff00';
+        menuConfig.color = '#000';
+        this.add.text(centerX, centerY + textSpacer, 'Press <- for Esay or -> for Hard',menuConfig).setOrigin(0.5);
     
-    //define keys
-    keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        //define keys
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     }
 
     update() {
