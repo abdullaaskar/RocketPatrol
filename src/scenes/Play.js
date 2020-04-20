@@ -5,9 +5,14 @@ class Play extends Phaser.Scene{
 
     preload(){
         //load images/tile sprite
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('rocket', './assets/bullet.png');
+        this.load.image('fast', './assets/fast.png');
+        this.load.image('spaceship', './assets/target.png');
+        this.load.image('starfield', './assets/grass.png');
+        this.load.image('archer', './assets/jian.png');
+        this.load.image('top', './assets/top.png');
+        this.load.image('rightedge', './assets/right.png');
+        this.load.image('leftedge', './assets/left.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
@@ -15,27 +20,30 @@ class Play extends Phaser.Scene{
     create() {
         //place tile sprite
         this.starfield = this.add.tileSprite(0,0,640,480,'starfield').setOrigin(0,0);
+        this.archer = this.add.tileSprite(20,430,600,60,'archer').setOrigin(0,0);
+        this.top = this.add.tileSprite(0,0,640,40,'top').setOrigin(0,0);
+        this.rightedge = this.add.tileSprite(600,0,40,480,'rightedge').setOrigin(0,0);
+        this.leftedge = this.add.tileSprite(0,0,40,480,'leftedge').setOrigin(0,0);
 
-        //white rectangle borders
-        this.add.rectangle(5,5,630,32,0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(6,443,630,32,0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(5,5,32,455,0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(603,5,32,455,0xFFFFFF).setOrigin(0,0);
+
         //green UI background
-        this.add.rectangle(37,42,566,64,0x00FF00).setOrigin(0,0);
+        this.add.rectangle(50,42,140,60,0x00FF00).setOrigin(0,0);
 
         //add rocket (p1)
-        this.p1Rocket = new Rocket(this,game.config.width/2, 431, 'rocket').setScale(0.5,0.5).setOrigin(0,0);
+        this.p1Rocket = new Rocket(this,game.config.width/2, 431, 'rocket').setOrigin(0,0);
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceship', 0, 30).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceship', 0, 10).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width - 80, 150, 'spaceship', 0, 30).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width - 186, 210, 'spaceship', 0, 20).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width - 282, 282, 'spaceship', 0, 10).setOrigin(0,0);
+        this.ship04 = new Fast(this, game.config.width - 80, 100, 'fast', 0, 50).setScale(0.8,0.7).setOrigin(0,0);
+     
     
         //define keyboard keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
 
         //animation config 
         this.anims.create({
@@ -50,7 +58,7 @@ class Play extends Phaser.Scene{
         //score display
         let scoreConfig = {
             fontFamily: 'Courier',
-            fontSize: '28px',
+            fontSize: '22px',
             backgroundColor: '#F3B141',
             color: '#843605',
             align: 'right',
@@ -68,8 +76,8 @@ class Play extends Phaser.Scene{
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0,5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64,'(F)ire to Restart or <- for Menu', scoreConfig).setOrigin(0,5);
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64,'(F)ire to Restart or <- for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
     }
@@ -93,9 +101,14 @@ class Play extends Phaser.Scene{
             this.ship01.update();
             this.ship02.update();
             this.ship03.update();
+            this.ship04.update();
         }
 
     // check collisions
+    if(this.checkCollision(this.p1Rocket, this.ship04)) {
+        this.p1Rocket.reset();
+        this.shipExplode(this.ship04);
+    }
     if(this.checkCollision(this.p1Rocket, this.ship03)) {
         this.p1Rocket.reset();
         this.shipExplode(this.ship03);
